@@ -53,12 +53,6 @@ void dataReceiver()
     Acc[1] = atan(-1 * (AcX / A_R) / sqrt(pow((AcY / A_R), 2) + pow((AcZ / A_R), 2))) * RAD_TO_DEG;
     Acc[0] = atan((AcY / A_R) / sqrt(pow((AcX / A_R), 2) + pow((AcZ / A_R), 2))) * RAD_TO_DEG;
 
-    Serial.print("Acc = ");
-    Serial.print(Acc[1]);
-    Serial.print("\t");
-    Serial.print(Acc[0]);
-    Serial.print("\t");
-
     Wire.beginTransmission(MPU);
     Wire.write(0x43);
     Wire.endTransmission(false);
@@ -82,8 +76,10 @@ void dataReceiver()
     //  Integration
     Angle[2] = Angle[2] + Gy[2] * dt;
 
-    value = "90, " + String(Angle[0]) + "," + String(Angle[1]) + "," + String(Angle[2]) + ", -90";
-    Serial.println(value);
+    // value = "90, " + String(Angle[0]) + "," + String(Angle[1]) + "," + String(Angle[2]) + ", -90";
+    // Serial.println(value);
+
+    Serial.printf("Gy : %2f     Gx : %2f     Gz : %2f \r\n", Angle[0],  Angle[1],  Angle[2]);
 
     // processData();
 }
