@@ -3,7 +3,7 @@
 
 const int MPU = 0x68;
 int16_t AcX, AcY, AcZ, GyX, GyY, GyZ;
-float gForceX, gForceY, gForceZ, rotX, rotY, rotZ;
+float gForceX, gForceY, gForceZ, rotX, rotY, rotZ, Tmp;
 
 #define A_R 16384.0 // 32768/2
 #define G_R 131.0   // 32768/250
@@ -35,7 +35,7 @@ void loop()
 {
     dataReceiver();
     // debugFunction(AcX, AcY, AcZ, GyX, GyY, GyZ);
-    delay(200);
+    // delay(200);
 }
 
 //###################################################################################
@@ -52,6 +52,12 @@ void dataReceiver()
 
     Acc[1] = atan(-1 * (AcX / A_R) / sqrt(pow((AcY / A_R), 2) + pow((AcZ / A_R), 2))) * RAD_TO_DEG;
     Acc[0] = atan((AcY / A_R) / sqrt(pow((AcX / A_R), 2) + pow((AcZ / A_R), 2))) * RAD_TO_DEG;
+
+    Serial.print("Acc = ");
+    Serial.print(Acc[1]);
+    Serial.print("\t");
+    Serial.print(Acc[0]);
+    Serial.print("\t");
 
     Wire.beginTransmission(MPU);
     Wire.write(0x43);
