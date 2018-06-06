@@ -3,7 +3,6 @@
 
 const int MPU = 0x68;
 int16_t AcX, AcY, AcZ, GyX, GyY, GyZ;
-float gForceX, gForceY, gForceZ, rotX, rotY, rotZ, Tmp;
 
 #define A_R 16384.0 // 32768/2
 #define G_R 131.0   // 32768/250
@@ -17,10 +16,6 @@ float dt;
 
 String value;
 
-void dataReceiver();
-void processData();
-void debugFunction(int16_t AcX, int16_t AcY, int16_t AcZ, int16_t GyX, int16_t GyY, int16_t GyZ);
-
 void setup()
 {
     Serial.begin(115200);
@@ -32,14 +27,6 @@ void setup()
 }
 
 void loop()
-{
-    dataReceiver();
-    // debugFunction(AcX, AcY, AcZ, GyX, GyY, GyZ);
-    // delay(200);
-}
-
-//###################################################################################
-void dataReceiver()
 {
     Wire.beginTransmission(MPU);
     Wire.write(0x3B);
@@ -76,51 +63,6 @@ void dataReceiver()
     //  Integration
     Angle[2] = Angle[2] + Gy[2] * dt;
 
-    // value = "90, " + String(Angle[0]) + "," + String(Angle[1]) + "," + String(Angle[2]) + ", -90";
-    // Serial.println(value);
-
+    //  Debug data
     Serial.printf("Gy : %2f     Gx : %2f     Gz : %2f \r\n", Angle[0],  Angle[1],  Angle[2]);
-
-    // processData();
 }
-
-void processData()
-{
-    Serial.print("AcX : ");
-    Serial.print(AcX);
-    Serial.print("\tAcY : ");
-    Serial.print(AcY);
-    Serial.print("\tAcZ : ");
-    Serial.println(AcZ);
-
-    //AFS_SEL : 0   ||  Full Scale Range : ±2g  ||  LSB Sensitivity :16384 LSB/g
-    gForceX = AcX / 16384.0;
-    gForceY = AcY / 16384.0;
-    gForceZ = AcZ / 16384.0;
-
-    // FS_SEL : 0   ||  Full Scale Range : ± 250 °/s    ||  LSB Sensitivity : 131 LSB/°/s
-    rotX = GyX / 131.0;
-    rotY = GyY / 131.0;
-    rotZ = GyZ / 131.0;
-}
-
-void debugFunction(int16_t AcX, int16_t AcY, int16_t AcZ, int16_t GyX, int16_t GyY, int16_t GyZ)
-{
-    // Print the MPU values to the serial monitor
-    // Serial.print("Accelerometer: ");
-    // Serial.print("X=");
-    // Serial.print(gForceX);
-    // Serial.print("|Y=");
-    // Serial.print(gForceY);
-    // Serial.print("|Z=");
-    // Serial.println(gForceZ);
-    Serial.print("Gyroscope:");
-    Serial.print("X=");
-    Serial.print(rotX);
-    Serial.print("|Y=");
-    Serial.print(rotY);
-    Serial.print("|Z=");
-    Serial.println(rotZ);
-}
-
-//###################################################################################
